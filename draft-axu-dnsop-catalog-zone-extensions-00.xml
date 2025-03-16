@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+     draft-rfcxml-general-template-standard-00
+  
+     This template includes examples of the most commonly used features of RFCXML with comments 
+     explaining how to customise them. This template can be quickly turned into an I-D by editing 
+     the examples provided. Look for [REPLACE], [REPLACE/DELETE], [CHECK] and edit accordingly.
+     Note - 'DELETE' means delete the element or attribute, not just the contents.
+     
+     Documentation is at https://authors.ietf.org/en/templates-and-schemas
+-->
+<?xml-model href="rfc7991bis.rnc"?>  <!-- Required for schema validation and schema-aware editing -->
+<!-- <?xml-stylesheet type="text/xsl" href="rfc2629.xslt" ?> -->
+
+<!DOCTYPE rfc [
+  <!ENTITY nbsp    "&#160;">
+  <!ENTITY zwsp   "&#8203;">
+  <!ENTITY nbhy   "&#8209;">
+  <!ENTITY wj     "&#8288;">
+]>
+
+<rfc
+  xmlns:xi="http://www.w3.org/2001/XInclude"
+  category="info"
+  docName="draft-axu-dnsop-catalog-zone-extensions-00"
+  ipr="trust200902"
+  obsoletes=""
+  updates="9432"
+  submissionType="IETF"
+  xml:lang="en"
+  version="3">
+<!-- [REPLACE] 
+       * docName with name of your draft
+     [CHECK] 
+       * category should be one of std, bcp, info, exp, historic
+       * ipr should be one of trust200902, noModificationTrust200902, noDerivativesTrust200902, pre5378Trust200902
+-->
+
+  <front>
+    <title abbrev="Catalog Zone Extensions">DNS Catalog Zone Extensions</title>
+
+    <seriesInfo name="Internet-Draft" value="draft-axu-dnsop-catalog-zone-extensions-00"/>
+   
+    <author fullname="Aleksi Suhonen" initials="A" surname="Suhonen">
+      <organization>TREX Regional Exchanges Oy]</organization>
+      <address>
+        <postal>
+          <!-- Reorder these if your country does things differently -->
+          <street>Kuninkaankatu 30 A</street>
+          <city>Tampere</city>
+          <code>33720</code>
+          <country>FI</country>
+        </postal>        
+        <email>i-d-2025@ssd.axu.tm</email>  
+      </address>
+    </author>
+   
+    <date year="2025"/>
+
+    <area>General</area>
+    <workgroup>Internet Engineering Task Force</workgroup>
+    <keyword>catalog</keyword>
+    <abstract>
+      <t>The Catalog Zones RFC defines some basics for using
+	a DNS zone to configure secondary DNS servers, but it
+	does not define all the basics. This document extends
+	the definition to include all the basics.</t>
+    </abstract>
+ 
+  </front>
+
+  <middle>
+    
+    <section>
+      <name>Introduction</name>
+      <t>The Catalog Zones RFC <xref target="RFC9432"/> defines
+	the terminology and some basics for using a DNS zone to
+	configure secondary DNS servers, but it does not define all
+	the basics.
+	This document extends the definition to include all the basics.</t>
+      
+      <section>
+        <name>Requirements Language</name>
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL",
+          "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT
+          RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
+          interpreted as described in BCP 14 <xref target="RFC2119"/>
+          <xref target="RFC8174"/> when, and only when, they appear in
+          all capitals, as shown here.</t>
+      </section>
+
+    </section>
+    
+    <section>
+      <name>Description</name>
+      <t>Body text [REPLACE]</t>
+    </section>   
+    
+    <section>
+      <name>Catalog Zone Structure</name>
+      <t>These new properties can be at the top of the catalog zone,
+	where they will affect all member zones, or under a member zone
+	label, where they will affect just that member zone.</t>
+    </section>   
+    
+    <section>
+      <name>New Properties</name>
+      <t>Body text [REPLACE]</t>
+
+	<section>
+	  <name>Primaries</name>
+	  <t>Body text [REPLACE]</t>
+
+	    <section>
+	      <name>TSIG Key Name</name>
+	      <t>Body text [REPLACE]</t>
+	    </section>
+
+	    <section>
+	      <name>TLSA</name>
+	      <t>Body text [REPLACE]</t>
+	    </section>
+	</section>
+
+	<section>
+	  <name>Allow Transfer</name>
+	  <t>Body text [REPLACE]</t>
+	</section>
+
+	<section>
+	  <name>Allow Query</name>
+	  <t>Body text [REPLACE]</t>
+	</section>
+
+	<section>
+	  <name>Also Notify</name>
+	  <t>Body text [REPLACE]</t>
+	</section>
+    </section>   
+    
+    <section>
+      <name>Name Server Behavior</name>
+      <t>Body text [REPLACE]</t>
+    </section>   
+    
+    <section>
+      <name>Implementation and Operational Notes</name>
+      <t>Body text [REPLACE]</t>
+    </section>   
+    
+    <section anchor="IANA">
+    <!-- All drafts are required to have an IANA considerations section. See RFC 8126 for a guide.-->
+      <name>IANA Considerations</name>
+      <t>IANA has created the "DNS Catalog Zones Properties" registry under
+	the "Domain Name System (DNS) Parameters" registry. The following
+	properties are added to the registry:</t>
+<!-- TODO: create table -->
+    </section>
+    
+    <section anchor="Security">
+      <!-- All drafts are required to have a security considerations section. See RFC 3552 for a guide. -->
+      <name>Security Considerations</name>
+      <t>This document should not affect the security of the Internet. [CHECK]</t>
+    </section>
+    
+    <!-- NOTE: The Acknowledgements and Contributors sections are at the end of this template -->
+  </middle>
+
+  <back>
+    <references>
+      <name>References</name>
+      <references>
+        <name>Normative References</name>
+        
+        <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml"/>
+        <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml"/>
+        <xi:include href="https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9432.xml"/>
+        <!-- The recommended and simplest way to include a well known reference -->
+        
+      </references>
+ 
+      <references>
+        <name>Informative References</name>
+       
+        <reference anchor="exampleRefMin">
+        <!-- [REPLACE/DELETE] Example minimum reference -->
+          <front>
+            <title>Title [REPLACE]</title>
+            <author initials="Initials [REPLACE]" surname="Surname [REPLACE]">
+              <organization/>
+            </author>
+            <date year="2006"/>
+            <!-- [CHECK] -->
+          </front>
+        </reference>
+
+        <reference anchor="exampleRefOrg" target="http://www.example.com/">
+        <!-- [REPLACE/DELETE] Example reference written by an organization not a person -->
+          <front>
+            <title>Title [REPLACE]</title>
+            <author>
+              <organization>Organization [REPLACE]</organization>
+            </author>
+            <date year="1984"/>
+            <!-- [CHECK] -->
+          </front>
+        </reference>       
+       
+      </references>
+    </references>
+    
+    <section>
+      <name>Appendix 1 [REPLACE/DELETE]</name>
+      <t>This becomes an Appendix [REPLACE]</t>
+    </section>
+
+    <section anchor="Acknowledgements" numbered="false">
+      <!-- [REPLACE/DELETE] an Acknowledgements section is optional -->
+      <name>Acknowledgements</name>
+      <t>This template uses extracts from templates written by Pekka Savola, Elwyn Davies and 
+        Henrik Levkowetz. [REPLACE]</t>
+    </section>
+    
+    <section anchor="Contributors" numbered="false">
+      <!-- [REPLACE/DELETE] a Contributors section is optional -->
+      <name>Contributors</name>
+      <t>Thanks to all of the contributors. [REPLACE]</t>
+      <!-- [CHECK] it is optional to add a <contact> record for some or all contributors -->
+    </section>
+    
+ </back>
+</rfc>
