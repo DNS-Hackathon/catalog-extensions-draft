@@ -66,7 +66,21 @@
         <email>willem@nlnetlabs.nl</email>  
       </address>
     </author>
- 
+
+    <author fullname="Anand Buddhdev" initials="A" surname="Buddhdev">
+      <organization>RIPE NCC</organization>
+      <address>
+        <postal>
+          <!-- Reorder these if your country does things differently -->
+          <street>Stationsplein 11</street>
+          <city>Amsterdam</city>
+          <code>1012 AB</code>
+          <country>NL</country>
+        </postal>        
+        <email>anandb@ripe.net</email>  
+      </address>
+    </author>
+	  
     <date year="2025"/>
 
     <area>Operations</area>
