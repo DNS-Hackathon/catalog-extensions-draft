@@ -107,7 +107,7 @@ Body text \[REPLACE\]
 
 Body text \[REPLACE\]
 
-## Also Notify
+## Allow Notify
 
 Body text \[REPLACE\]
     
