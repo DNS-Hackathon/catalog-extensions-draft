@@ -1,2 +1,2 @@
 # catalog-extensions-draft
-Extensions to Catalog Zones
+Zone Transfer Extensions to Catalog Zones
