@@ -54,6 +54,18 @@ author:
     city: Amsterdam
     country: NL
     email: anandb@ripe.net
+ -
+    name: Karl Dyson
+    ins: K. Dyson
+    org: Nominet UK
+    street: Minerva House
+    street: Edmund Halley Road
+    street: Oxford Science Park
+    city: Oxford
+    code: OX4 4DQ
+    country: UK
+    email: karl.dyson@nominet.uk
+    uri: https://nominet.uk
   
 normative:
 
