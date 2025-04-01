@@ -27,13 +27,13 @@ venue:
 
 author:
  -
-    fullname: Aleksi Suhone
+    fullname: Aleksi Suhonen
     ins: A. Suhonen
     org: TREX Regional Exchanges Oy
     abbrev: TREX
     street: Kuninkaankatu 30 A
     city: Tampere
-    code: 33720
+    code: 33200
     country: FI
     email: i-d-2025@ssd.axu.tm
  -
