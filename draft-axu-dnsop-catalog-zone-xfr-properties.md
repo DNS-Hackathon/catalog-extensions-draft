@@ -105,13 +105,24 @@ Body text \[REPLACE\]
 This property defines which server(s) the zone(s) will be fetched from. The resource record types on this property MUST be either A or AAAA. If there are multiple resource records, they will be used in random order.
 Different primaries MAY be distinguished by an additional label, which will allow binding additional attributes to each server.
 
-\[WRITE EXAMPLE\]
+~~~ ascii-art
+primaries.$CATZ   0                  IN A 192.0.2.53
+
+ZONELABEL1.zones.$CATZ  0            IN PTR example.com.
+primaries.ZONELABEL1.zones.$CATZ  0  IN AAAA 2001:db8:35::53
+~~~
 
 ### TSIG Key Name
 
 The primaries property, with or without the extra label, MAY also have a TXT resource record, which will contain the name of the TSIG key to use to protect zone transfers. The key(s) MUST be defined elsewhere, such as in the configuration file of the consumer. If the key cannot be found, the consumer MUST NOT attempt a zone transfer.
 
-\[WRITE EXAMPLE\]
+~~~ ascii-art
+ZONELABEL2.zones.$CATZ  0                IN PTR example.net.
+ns1.primaries.ZONELABEL2.zones.$CATZ  0  IN AAAA 2001:db8:35::53
+ns1.primaries.ZONELABEL2.zones.$CATZ  0  IN TXT "keyname-for-ns1"
+ns2.primaries.ZONELABEL2.zones.$CATZ  0  IN AAAA 2001:db8:35::54
+ns2.primaries.ZONELABEL2.zones.$CATZ  0  IN TXT "keyname-for-ns2"
+~~~
 
 ### TLSA
 
@@ -119,32 +130,53 @@ The primaries property, with or without the extra label, MAY also have one or mo
 
 \[WRITE EXAMPLE\]
 
-## Also Notify
+## Notify
 
-The also-notify property MAY be used to list hosts that the consumer will send NOTIFY messages to when it loads a new version of the target zone(s).
+This property MAY be used to define the NOTIFY sending behavior of the consumer for the target zone(s). It MAY contain resource records of type A, AAAA and TXT.
 
-\[WRITE EXAMPLE\]
+The A and AAAA records list hosts that the consumer will send NOTIFY messages to when it loads a new version of the target zone(s).
+
+If a record of type TXT is not found, the consumer MAY also send NOTIFYs according to its default behavior as defined by its configuration and its code. However, if a TXT record is found, this default behavior MUST be surpressed, and NOTIFYs are only sent to the hosts listed in A and AAAA records if any. The value of the TXT record doesn't matter, and thus the number of TXT records also does not matter.
+
+~~~ ascii-art
+notify.$CATZ  0                          IN A 192.0.2.49
+
+ZONELABEL3.zones.$CATZ  0                IN PTR example.org.
+notify.ZONELABEL3.zones.$CATZ  0         IN AAAA 2001:db8:35::53
+notify.ZONELABEL3.zones.$CATZ  0         IN TXT "no default notifies"
+
+ZONELABEL4.zones.$CATZ  0                IN PTR sub.example.org.
+notify.ZONELABEL4.zones.$CATZ  0         IN AAAA 2001:db8:35::54
+notify.ZONELABEL4.zones.$CATZ  0         IN TXT ""
+~~~
  
 ## Allow Query
 
 The allow-query property MAY be used to define an access list of hosts or networks that are allowed to send queries for the target zone(s).
-The resource record type MUST be either APL or CNAME. The APL record (RFC3123) MAY be used to define the access-list directly, while the CNAME record MAY be used to refer to an access-list already defined elsewhere. The CNAME MUST point to a name that has an APL record.
+The resource record type MUST be either APL or CNAME. The APL record {{!RFC3123 (APL RR)}} MAY be used to define the access-list directly, while the CNAME record MAY be used to refer to an access-list already defined elsewhere. The CNAME MUST point to a name that has an APL record.
 
-\[WRITE EXAMPLE\]
+~~~ ascii-art
+ZONELABEL5.zones.$CATZ  0                IN PTR example.local.
+allow-query.ZONELABEL5.zones.$CATZ  0    IN APL 1:10.0.0.0/8 !1:0.0.0.0/0 !2:0:0:0:0:0:0:0:0/0
+~~~
+
 QUESTION1: should we define a label convention for pre-defining access-lists in a CATZ?
+
 QUESTION2: should we allow pre-defined access-lists in external zones?
 
 ## Allow Transfer
 
 The allow-transfer property MAY be used to define an access list of hosts or networks that are allowed to transfer the target zone(s) from the consumer.
-The resource record type MUST be either APL or CNAME. The APL record (RFC3123) MAY be used to define the access-list directly, while the CNAME record MAY be used to refer to an access-list already defined elsewhere. The CNAME MUST point to a name that has an APL record.
+The resource record type MUST be either APL or CNAME. The APL record {{!RFC3123 (APL RR)}} MAY be used to define the access-list directly, while the CNAME record MAY be used to refer to an access-list already defined elsewhere. The CNAME MUST point to a name that has an APL record.
 
-\[WRITE EXAMPLE\]
+~~~ ascii-art
+ZONELABEL5.zones.$CATZ  0                  IN PTR example.local.
+allow-transfer.ZONELABEL5.zones.$CATZ  0   IN APL !1:0.0.0.0/0 !2:0:0:0:0:0:0:0:0/0
+~~~
 
 # Name Server Behavior
 
 Body text \[REPLACE\]
-Default notifies? Default transfers?
 
 # Implementation and Operational Notes
 
@@ -157,7 +189,7 @@ IANA is requested to add the following entries to the "DNS Catalog Zones Propert
 | Property Prefix | Description              | Status          | Reference         |
 |-----------------|--------------------------|-----------------|-------------------|
 | primaries       | Primary name servers     | Standards Track | \[this document\] |
-| also-notify     | Also send NOTIFY to      | Standards track | \[this document\] |
+| notify          | Send NOTIFY behavior     | Standards track | \[this document\] |
 | allow-transfer  | Allow zone transfer from | Standards track | \[this document\] |
 | allow-query     | Allow queries from       | Standards track | \[this document\] |
 
