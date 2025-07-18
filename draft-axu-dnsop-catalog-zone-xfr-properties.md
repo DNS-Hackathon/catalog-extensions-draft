@@ -94,7 +94,7 @@ Body text \[REPLACE\]
     
 # Catalog Zone Structure
 
-These new properties can be at the top of the catalog zone, where they will affect all member zones, or under a member zone label, where they will affect just that member zone.
+These new properties MAY be at the apex of the catalog zone, where they will affect all member zones, or under a member zone label, where they will affect just that member zone. Any property under a member zone label will override that same property at the apex.
 
 # New Properties
 
@@ -102,31 +102,49 @@ Body text \[REPLACE\]
 
 ## Primaries
 
-Body text \[REPLACE\]
+This property defines which server(s) the zone(s) will be fetched from. The resource record types on this property MUST be either A or AAAA. If there are multiple resource records, they will be used in random order.
+Different primaries MAY be distinguished by an additional label, which will allow binding additional attributes to each server.
+
+\[WRITE EXAMPLE\]
 
 ### TSIG Key Name
 
-Body text \[REPLACE\]
+The primaries property, with or without the extra label, MAY also have a TXT resource record, which will contain the name of the TSIG key to use to protect zone transfers. The key(s) MUST be defined elsewhere, such as in the configuration file of the consumer. If the key cannot be found, the consumer MUST NOT attempt a zone transfer.
+
+\[WRITE EXAMPLE\]
 
 ### TLSA
 
-Body text \[REPLACE\]
+The primaries property, with or without the extra label, MAY also have one or more TLSA resource records
 
-## Allow Notify
+\[WRITE EXAMPLE\]
 
-Body text \[REPLACE\]
+## Also Notify
+
+The also-notify property MAY be used to list hosts that the consumer will send NOTIFY messages to when it loads a new version of the target zone(s).
+
+\[WRITE EXAMPLE\]
  
-## Allow Transfer
-
-Body text \[REPLACE\]
-
 ## Allow Query
 
-Body text \[REPLACE\]
-   
+The allow-query property MAY be used to define an access list of hosts or networks that are allowed to send queries for the target zone(s).
+The resource record type MUST be either APL or CNAME. The APL record (RFC3123) MAY be used to define the access-list directly, while the CNAME record MAY be used to refer to an access-list already defined elsewhere. The CNAME MUST point to a name that has an APL record.
+
+\[WRITE EXAMPLE\]
+QUESTION1: should we define a label convention for pre-defining access-lists in a CATZ?
+QUESTION2: should we allow pre-defined access-lists in external zones?
+
+## Allow Transfer
+
+The allow-transfer property MAY be used to define an access list of hosts or networks that are allowed to transfer the target zone(s) from the consumer.
+The resource record type MUST be either APL or CNAME. The APL record (RFC3123) MAY be used to define the access-list directly, while the CNAME record MAY be used to refer to an access-list already defined elsewhere. The CNAME MUST point to a name that has an APL record.
+
+\[WRITE EXAMPLE\]
+
 # Name Server Behavior
 
 Body text \[REPLACE\]
+Default notifies? Default transfers?
 
 # Implementation and Operational Notes
 
@@ -139,7 +157,7 @@ IANA is requested to add the following entries to the "DNS Catalog Zones Propert
 | Property Prefix | Description              | Status          | Reference         |
 |-----------------|--------------------------|-----------------|-------------------|
 | primaries       | Primary name servers     | Standards Track | \[this document\] |
-| allow-notify    | Allow NOTIFY from        | Standards track | \[this document\] |
+| also-notify     | Also send NOTIFY to      | Standards track | \[this document\] |
 | allow-transfer  | Allow zone transfer from | Standards track | \[this document\] |
 | allow-query     | Allow queries from       | Standards track | \[this document\] |
 
