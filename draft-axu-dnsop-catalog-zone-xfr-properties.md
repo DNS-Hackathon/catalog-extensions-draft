@@ -73,7 +73,7 @@ informative:
 
 --- abstract
 
-This document specifies DNS Catalog Zones Properties that define the primary name servers from which specific or all member zones can transfer their associated zone, as well as properties for access control for those transfers.
+This document specifies DNS Catalog Zones Properties that define the primary name servers from which specific or all member zones can transfer their associated zone, as well as properties related to zone transfers such as access control.
 
 --- middle
 
@@ -102,7 +102,7 @@ Body text \[REPLACE\]
 
 ## Primaries
 
-This property defines which server(s) the zone(s) will be fetched from. The resource record types on this property MUST be either A or AAAA. If there are multiple resource records, they will be used in random order.
+This property defines which server(s) the member zone(s) will be fetched from. The resource record types on this property MUST be either A or AAAA. If there are multiple resource records, they will be used in random order.
 Different primaries MAY be distinguished by an additional label, which will allow binding additional attributes to each server.
 
 ~~~ ascii-art
@@ -111,6 +111,8 @@ primaries.$CATZ   0                  IN A 192.0.2.53
 ZONELABEL1.zones.$CATZ  0            IN PTR example.com.
 primaries.ZONELABEL1.zones.$CATZ  0  IN AAAA 2001:db8:35::53
 ~~~
+
+If there are any RRs attached to the primaries that are not covered by this document, they SHOULD be ignored.
 
 ### TSIG Key Name
 
@@ -126,17 +128,17 @@ ns2.primaries.ZONELABEL2.zones.$CATZ  0  IN TXT "keyname-for-ns2"
 
 ### TLSA
 
-The primaries property, with or without the extra label, MAY also have one or more TLSA resource records
+The primaries property, with or without the extra label, MAY also have one or more TLSA resource records. This will apply restrictions to which keys can be used to transfer the member zone(s) using DNS over TLS or DNS over QUIC. (is this correct?)
 
 \[WRITE EXAMPLE\]
 
 ## Notify
 
-This property MAY be used to define the NOTIFY sending behavior of the consumer for the target zone(s). It MAY contain resource records of type A, AAAA and TXT.
+This property MAY be used to define the DNS NOTIFY message sending behavior of the consumer for the target zone(s). It MAY contain resource records of type A, AAAA and TXT.
 
-The A and AAAA records list hosts that the consumer will send NOTIFY messages to when it loads a new version of the target zone(s).
+The A and AAAA records list hosts that the consumer will send DNS NOTIFY messages to when it loads a new version of the target zone(s).
 
-If a record of type TXT is not found, the consumer MAY also send NOTIFYs according to its default behavior as defined by its configuration and its code. However, if a TXT record is found, this default behavior MUST be surpressed, and NOTIFYs are only sent to the hosts listed in A and AAAA records if any. The value of the TXT record doesn't matter, and thus the number of TXT records also does not matter.
+If a record of type TXT is not found, the consumer MAY also send NOTIFYs according to its default behavior as defined by its configuration and its code. However, if a TXT record is found, this default behavior MUST be suppressed, and NOTIFYs are only sent to the hosts listed in A and AAAA records if any. The value of the TXT record doesn't matter, and thus the number of TXT records also does not matter.
 
 ~~~ ascii-art
 notify.$CATZ  0                          IN A 192.0.2.49
@@ -149,6 +151,8 @@ ZONELABEL4.zones.$CATZ  0                IN PTR sub.example.org.
 notify.ZONELABEL4.zones.$CATZ  0         IN AAAA 2001:db8:35::54
 notify.ZONELABEL4.zones.$CATZ  0         IN TXT ""
 ~~~
+
+If there are any RRs attached to the notify property that are not covered by this document, they SHOULD be ignored.
  
 ## Allow Query
 
@@ -159,6 +163,8 @@ The resource record type MUST be either APL or CNAME. The APL record {{!RFC3123 
 ZONELABEL5.zones.$CATZ  0                IN PTR example.local.
 allow-query.ZONELABEL5.zones.$CATZ  0    IN APL 1:10.0.0.0/8 !1:0.0.0.0/0 !2:0:0:0:0:0:0:0:0/0
 ~~~
+
+If there are RRs other than APL or CNAME attached to the allow-query property, and if an APL RR cannot be found or there is a CNAME that doesn't point to an APL, then the most restrictive access list possible SHOULD be assumed.
 
 QUESTION1: should we define a label convention for pre-defining access-lists in a CATZ?
 
@@ -174,6 +180,8 @@ ZONELABEL5.zones.$CATZ  0                  IN PTR example.local.
 allow-transfer.ZONELABEL5.zones.$CATZ  0   IN APL !1:0.0.0.0/0 !2:0:0:0:0:0:0:0:0/0
 ~~~
 
+If there are RRs other than APL or CNAME attached to the allow-transfer property, and if an APL RR cannot be found or there is a CNAME that doesn't point to an APL, then the most restrictive access list possible SHOULD be assumed.
+
 # Name Server Behavior
 
 Body text \[REPLACE\]
@@ -182,6 +190,8 @@ Body text \[REPLACE\]
 
 Body text \[REPLACE\]
 
+The rationale for allowing CNAMEs for access lists is that a large and complex catalog may have large and complex access lists repeated a million times. But if there are only a few different access lists, they could be defined separately and then be referenced a million times, reducing both the size and processing effort of the catalog zone.
+
 # IANA Considerations {#IANA}
 
 IANA is requested to add the following entries to the "DNS Catalog Zones Properties" registry under the "Domain Name System (DNS) Parameters" page:
@@ -189,7 +199,7 @@ IANA is requested to add the following entries to the "DNS Catalog Zones Propert
 | Property Prefix | Description              | Status          | Reference         |
 |-----------------|--------------------------|-----------------|-------------------|
 | primaries       | Primary name servers     | Standards Track | \[this document\] |
-| notify          | Send NOTIFY behavior     | Standards track | \[this document\] |
+| notify          | Send DNS NOTIFY behavior | Standards track | \[this document\] |
 | allow-transfer  | Allow zone transfer from | Standards track | \[this document\] |
 | allow-query     | Allow queries from       | Standards track | \[this document\] |
 
@@ -199,15 +209,48 @@ IANA is requested to add the following entries to the "DNS Catalog Zones Propert
 
 This section records the status of known implementations of the protocol defined by this specification at the time of posting of this Internet-Draft {{?RFC7942}}.
 
+The existing Bind9 implementation of primaries, allow-transfer and allow-query was a major inspiration for writing this draft.
+
 # Security and Privacy Considerations
 
-Security and Privacy Considerations
+The original RFC for Catalog Zones already covers a lot of security and privacy considerations, and they are all still valid, but there are also new security considerations introduced by this document.
+
+## Private Zone Exfiltration
+
+If the Catalog Zone producer and consumer are different organizations, the producer may be able to use a crafted Catalog Zone to exfiltrate a private zone on another server within the consumer's network by listing it in the Catalog Zone with more permissive query or transfer access lists. The producer needs to know the exact name of the private zone and an address of the primary where the consumer may fetch it from.f
+
+There are two ways to approach this security issue. One is to make sure that the consumer organisation does not allow zone transfers for private zones on the consuming server. Another approach is to sanitize the incoming Catalog Zone before consuming it, removing anything sensitive from it.
 
 --- back
 
 # Example Catalog with One of Everything
 
-Example Catalog with One of Everything
+~~~ ascii-art
+primaries.$CATZ   0                  IN A 192.0.2.53
+
+ZONELABEL1.zones.$CATZ  0            IN PTR example.com.
+primaries.ZONELABEL1.zones.$CATZ  0  IN AAAA 2001:db8:35::53
+
+ZONELABEL2.zones.$CATZ  0                IN PTR example.net.
+ns1.primaries.ZONELABEL2.zones.$CATZ  0  IN AAAA 2001:db8:35::53
+ns1.primaries.ZONELABEL2.zones.$CATZ  0  IN TXT "keyname-for-ns1"
+ns2.primaries.ZONELABEL2.zones.$CATZ  0  IN AAAA 2001:db8:35::54
+ns2.primaries.ZONELABEL2.zones.$CATZ  0  IN TXT "keyname-for-ns2"
+
+notify.$CATZ  0                          IN A 192.0.2.49
+
+ZONELABEL3.zones.$CATZ  0                IN PTR example.org.
+notify.ZONELABEL3.zones.$CATZ  0         IN AAAA 2001:db8:35::53
+notify.ZONELABEL3.zones.$CATZ  0         IN TXT "no default notifies"
+
+ZONELABEL4.zones.$CATZ  0                IN PTR sub.example.org.
+notify.ZONELABEL4.zones.$CATZ  0         IN AAAA 2001:db8:35::54
+notify.ZONELABEL4.zones.$CATZ  0         IN TXT ""
+
+ZONELABEL5.zones.$CATZ  0                IN PTR example.local.
+allow-query.ZONELABEL5.zones.$CATZ  0    IN APL 1:10.0.0.0/8 !1:0.0.0.0/0 !2:0:0:0:0:0:0:0:0/0
+allow-transfer.ZONELABEL5.zones.$CATZ  0   IN APL !1:0.0.0.0/0 !2:0:0:0:0:0:0:0:0/0
+~~~
 
 # Acknowledgements
 {:numbered="false"}
