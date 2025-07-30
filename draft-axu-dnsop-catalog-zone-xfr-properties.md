@@ -166,7 +166,7 @@ allow-query.ZONELABEL5.zones.$CATZ  0    IN APL 1:10.0.0.0/8 !1:0.0.0.0/0 !2:0:0
 
 If there are RRs other than APL or CNAME attached to the allow-query property, and if an APL RR cannot be found or there is a CNAME that doesn't point to an APL, then the most restrictive access list possible SHOULD be assumed.
 
-QUESTION1: should we define a label convention for pre-defining access-lists in a CATZ?
+QUESTION1: should we define a label convention for pre-defining access-lists in a CATZ? RFC9432 had the group property to do something like this, but it refers to resources outside DNS.
 
 QUESTION2: should we allow pre-defined access-lists in external zones?
 
