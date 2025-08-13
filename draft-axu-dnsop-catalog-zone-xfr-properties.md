@@ -173,7 +173,9 @@ QUESTION2: should we allow pre-defined access-lists in external zones?
 ## Allow Transfer
 
 The allow-transfer property MAY be used to define an access list of hosts or networks that are allowed to transfer the target zone(s) from the consumer.
-The resource record type MUST be either APL or CNAME. The APL record {{!RFC3123 (APL RR)}} MAY be used to define the access-list directly, while the CNAME record MAY be used to refer to an access-list already defined elsewhere. The CNAME MUST point to a name that has an APL record.
+The resource record type MUST be either APL or CNAME. The APL record {{!RFC3123 (APL RR)}} MAY be used to define the access-list directly, while the CNAME record MAY be used to refer to an access-list already defined elsewhere.
+A CNAME MUST point to a name that has an APL record.
+A CNAME MUST point to a name within the same catalog zone.
 
 ~~~ ascii-art
 ZONELABEL5.zones.$CATZ  0                  IN PTR example.local.
