@@ -66,6 +66,11 @@ author:
     country: UK
     email: karl.dyson@nominet.uk
     uri: https://nominet.uk
+ -
+    name: Aram Sargsyan
+    ins: A. Sargsyan
+    org: Internet Systems Consortium
+    email: aram@isc.org
   
 normative:
 
