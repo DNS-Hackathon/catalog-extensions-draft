@@ -4,7 +4,7 @@ abbrev: catalog-zone-xfr-properties
 category: std
 
 
-docname: draft-axu-dnsop-catalog-zone-xfr-properties-00
+docname: draft-axu-dnsop-catalog-zone-xfr-properties-01
 submissiontype: IETF
 number:
 date:
@@ -131,11 +131,26 @@ ns2.primaries.ZONELABEL2.zones.$CATZ  0  IN AAAA 2001:db8:35::54
 ns2.primaries.ZONELABEL2.zones.$CATZ  0  IN TXT "keyname-for-ns2"
 ~~~
 
-### TLSA
+### Signalling encrypted transports
 
-The primaries property, with or without the extra label, MAY also have one or more TLSA resource records. This will apply restrictions to which keys can be used to transfer the member zone(s) using DNS over TLS or DNS over QUIC. (is this correct?)
+The primaries property, *with* the extra label, MAY also have one or more TLSA resource records {{!RFC6698}}.
+The presence of TLSA records signals support of DNS over TLS (DoT) {{!RFC7858}} or DNS over QUIC (DoQ) {{!RFC9250}} by the primary and the means by which the catalog consumer can successfully authenticate the primary.
+TLSA records MUST be prepended by two labels (below the `property` label *with* the extra label) indicating the decimal representation of the port number (see {{Section 3 of !RFC6698}}) and the protocol name of the transport (see {{Section 4 of ?I-D.draft-ietf-dnsop-svcb-dane-05}}).
+Catalog consumers MUST transfer member zone and incremental updates over either DoT or DoQ in the presence of such TLSA records.
 
-\[WRITE EXAMPLE\]
+An authentication domain name (see {{Section 2 of !RFC8310}}) MAY be provided by a single PTR resource record at the same name as the TLSA records.
+When an authentication domain name is provided, catalog consumer MUST send the TLS SNI extension containing that name.
+
+For the same reasons as given in {{Section 3.1.3 of !RFC7672}}, the TLSA records with certificate usage PKIX-TA(0) or PKIX-EE(1) SHOULD NOT be included.
+Usage of such records by catalog consumers is undefined.
+Catalog consumers MAY treat such records as "unusable".
+
+~~~ ascii-art
+ZONELABEL2.zones.$CATZ  0                IN PTR example.net.
+ns1.primaries.ZONELABEL2.zones.$CATZ  0  IN AAAA 2001:db8:35::53
+_853._quic.ns1.primaries.ZONELABEL2.zones.$CATZ  0  IN PTR  ns1.example.net.
+_853._quic.ns1.primaries.ZONELABEL2.zones.$CATZ  0  IN TLSA 3 1 1 <SHA-256 pin>
+~~~
 
 ## Notify
 
