@@ -87,7 +87,11 @@ This document specifies DNS Catalog Zones Properties that define the primary nam
 {{!RFC9432 (DNS Catalog Zones)}} described a method for automatic DNS zone provisioning among DNS name servers by the catalog of zones to be provisioned as one or more regular DNS zones.
 Configuration associated with the member zones, such as from which primary name servers and with which {{!RFC8945 (TSIG keys)}} to transfer the zones, and from which IP addresses and with which TSIG keys {{!RFC1996 (DNS notifies)}} are allowed, were assumed to be preprovisioned at the catalog consumer.
 
-This document specifies DNS Catalog Zones Properties to specify primary name servers and TSIG keys to use to transfer the member zones in a catalog, as well as properties to specify which IP addresses, using which TSIG keys, are allowed to notify {{!RFC1996}} the secondary name server serving the member zones, in order to remove the need to preprovision those at the catalog consumers.
+This document specifies DNS Catalog Zones Properties to specify primary name servers and TSIG keys to use to transfer the member zones in a catalog, as well as properties to specify which IP addresses, using which TSIG keys, are allowed to notify {{!RFC1996}} the secondary name server serving the member zones, in order to:
+
+  - remove the necessity to preprovision those at the catalog consumers,
+  - to fascilitate ad-hoc changes, and
+  - to fascilitate exceptions for individual member zones.
 
 ## Requirements language
 
