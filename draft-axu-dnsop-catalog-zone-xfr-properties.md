@@ -87,7 +87,7 @@ This document specifies DNS Catalog Zones Properties that define the primary nam
 {{!RFC9432 (DNS Catalog Zones)}} described a method for automatic DNS zone provisioning among DNS name servers by the catalog of zones to be provisioned as one or more regular DNS zones.
 Configuration associated with the member zones, such as from which primary name servers and with which {{!RFC8945 (TSIG keys)}} to transfer the zones, and from which IP addresses and with which TSIG keys {{!RFC1996 (DNS notifies)}} are allowed, were assumed to be preprovisioned at the catalog consumer.
 
-This document specifies DNS Catalog Zones Properties to specify primary name servers to transfer the member zones in a catalog from, as well as properties to specify which IP addresses, using which cryptographic keys, are allowed to notify {{!RFC1996}} the secondary name server serving the member zones, in order to:
+This document specifies DNS Catalog Zones Properties to the specify primary name servers from which to transfer the member zones, as well as properties to specify which IP addresses, using which cryptographic keys, are allowed to notify {{!RFC1996}} the secondary name server serving the member zones, in order to:
 
   - remove the necessity to preprovision those at the catalog consumers,
   - to fascilitate ad-hoc changes, and
@@ -97,21 +97,16 @@ This document specifies DNS Catalog Zones Properties to specify primary name ser
 
 {::boilerplate bcp14-tagged}
 
-# Description
-
-Body text \[REPLACE\]
-    
 # Catalog Zone Structure
 
 These new properties MAY be at the apex of the catalog zone, where they will affect all member zones, or under a member zone label, where they will affect just that member zone. Any property under a member zone label will override that same property at the apex.
 
 # New Properties
 
-Body text \[REPLACE\]
-
 ## Primaries
 
-This property defines which server(s) the member zone(s) will be fetched from. The resource record types on this property MUST be either A or AAAA. If there are multiple resource records, they will be used in random order.
+This property defines which server(s) the member zone(s) will be fetched from. The resource record types on this property MUST be either A or AAAA. If there are multiple resource records, they will be used following the selection process in use by the catalog consumer.
+
 Different primaries MAY be distinguished by an additional label, which will allow binding additional attributes to each server.
 
 ~~~ ascii-art
@@ -210,13 +205,7 @@ allow-transfer.ZONELABEL5.zones.$CATZ  0   IN APL !1:0.0.0.0/0 !2:0:0:0:0:0:0:0:
 
 If there are RRs other than APL or CNAME attached to the allow-transfer property, and if an APL RR cannot be found or there is a CNAME that doesn't point to an APL, then the most restrictive access list possible SHOULD be assumed.
 
-# Name Server Behavior
-
-Body text \[REPLACE\]
-
 # Implementation and Operational Notes
-
-Body text \[REPLACE\]
 
 The rationale for allowing CNAMEs for access lists is that a large and complex catalog may have large and complex access lists repeated a million times. But if there are only a few different access lists, they could be defined separately and then be referenced a million times, reducing both the size and processing effort of the catalog zone.
 
