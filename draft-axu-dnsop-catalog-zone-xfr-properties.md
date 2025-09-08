@@ -234,7 +234,7 @@ The original RFC for Catalog Zones already covers a lot of security and privacy 
 
 ## Private Zone Exfiltration
 
-If the Catalog Zone producer and consumer are different organizations, the producer may be able to use a crafted Catalog Zone to exfiltrate a private zone on another server within the consumer's network by listing it in the Catalog Zone with more permissive query or transfer access lists. The producer needs to know the exact name of the private zone and an address of the primary where the consumer may fetch it from.f
+If the Catalog Zone producer and consumer are different organizations, the producer may be able to use a crafted Catalog Zone to exfiltrate a private zone on another server within the consumer's network by listing it in the Catalog Zone with more permissive query or transfer access lists. The producer needs to know the exact name of the private zone and an address of the primary where the consumer may fetch it from.
 
 There are two ways to approach this security issue. One is to make sure that the consumer organisation does not allow zone transfers for private zones on the consuming server. Another approach is to sanitize the incoming Catalog Zone before consuming it, removing anything sensitive from it.
 
