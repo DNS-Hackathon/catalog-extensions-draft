@@ -191,7 +191,7 @@ An additional label below the property name MAY be used to distinguish different
 The `notify` property, with or without the extra label, MAY also have a TXT RRset, which MUST consist of a single TXT RR, which will contain the name of the TSIG key to use to sign the NOTIFY message.
 The key(s) MUST be defined elsewhere, such as in the configuration file of the consumer.
 If the key cannot be found, the consumer MUST NOT notify the name server addresses for which the key was an additional attribute.
-If the TXT RRset contains more than a single TXT RR, the consumer MUST NOT notify the name server addresses for which the key was an additional attribute.
+A TXT RRset for a `notify` property containing more than a single TXT RR indicates a broken catalog zone that MUST NOT be processed (see {{Section 5.1 of !RFC9432}}).
 
 ~~~ ascii-art
 notify.$CATZ                      0 IN A 192.0.2.49
