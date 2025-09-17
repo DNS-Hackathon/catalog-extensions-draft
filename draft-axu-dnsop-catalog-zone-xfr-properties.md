@@ -148,7 +148,7 @@ If there are any RRs attached to the `primaries` that are not covered by this do
 
 The `primaries` property, with or without the extra label, MAY also have a TXT resource record set (RRset), which MUST consist of a single TXT RR, which will contain the name of the TSIG key to use to protect zone transfers. The key(s) MUST be defined elsewhere, such as in the configuration file of the consumer.
 If the key cannot be found, the consumer MUST NOT attempt a zone transfer from the name server addresses for which the TXT RRset was an additional attribute.
-If the TXT RRset contains more than a single TXT RR, the consumer MUST NOT attempt a zone transfer from the name server addresses for which the TXT RRset was an additional attribute.
+A TXT RRset for a `primaries` property containing more than a single TXT RR indicates a broken catalog zone that MUST NOT be processed (see {{Section 5.1 of !RFC9432}}).
 
 ~~~ ascii-art
 ZONELABEL2.zones.$CATZ  0                IN PTR example.net.
