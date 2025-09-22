@@ -271,7 +271,7 @@ ZONELABEL5.zones.$CATZ  0                IN PTR example.local.
 
 # Implementation and Operational Notes
 
-The rationale for allowing CNAMEs for access lists is that a large and complex catalog may have large and complex access lists repeated a million times. But if there are only a few different access lists, they could be defined separately and then be referenced a million times, reducing both the size and processing effort of the catalog zone.
+One of the rationales for allowing CNAMEs and DNAMEs is that a large and complex catalog may have large and complex access lists repeated a million times. But if there are only a few different access lists, they could be defined separately and then be referenced a million times, reducing both the size and processing effort of the catalog zone.
 
 # IANA Considerations {#IANA}
 
