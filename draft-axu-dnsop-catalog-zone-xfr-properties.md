@@ -81,6 +81,8 @@ informative:
 
 This document specifies DNS Catalog Zones Properties that define the primary name servers from which specific or all member zones can transfer their associated zone, as well as properties related to zone transfers such as access control.
 
+Besides the additional properties, this document updates RFC9432 by explicitly allowing CNAMEs and DNAMEs.
+
 --- middle
 
 # Introduction
