@@ -290,7 +290,7 @@ IANA is requested to add the following entries to the "DNS Catalog Zones Propert
 
 This section records the status of known implementations of the protocol defined by this specification at the time of posting of this Internet-Draft {{?RFC7942}}.
 
-The existing Bind9 implementation of `primaries`, `allow-transfer` and `allow-query` was a major inspiration for writing this draft.
+The existing BIND 9 implementation of `primaries`, `allow-transfer` and `allow-query` was a major inspiration for writing this draft.
 
 # Security and Privacy Considerations
 
