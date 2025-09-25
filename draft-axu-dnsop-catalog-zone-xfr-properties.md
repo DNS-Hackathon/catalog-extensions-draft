@@ -258,7 +258,7 @@ An APL RRset containing more that a single APL RR, MUST be interpreted as an APL
 The `allow-transfer` property MAY also have a TXT RRset, which will (further) restrict the zone to be transferable only with the TSIG key indicated in any of the TXT RRs in the set.
 The key(s) MUST be defined elsewhere, such as in the configuration file of the consumer.
 A TXT RRset for a `allow-transfer` property containing more than a single TXT RR indicates a broken catalog zone that MUST NOT be processed (see {{Section 5.1 of !RFC9432}}).
-If an TXT RRset is present together with an APL RR, then first the policies in the APL are applied, and if that results in transfers being allowed for the IP address, then in addition a TSIG key MUST match any of the TXT RRs in the TXT RRset.
+If a TXT RRset is present together with an APL RR, then first the policies in the APL are applied, and if that results in transfers being allowed for the IP address, then in addition a TSIG key MUST match any of the TXT RRs in the TXT RRset.
 If an TXT RRset is present without an APL RRset, then only a TSIG key MUST match in any of the TXT RRs in the TXT RRset, regardless of the querying IP address.
 
 If an `allow-transfer` property is present *and* contains APL RRsets and/or TXT RRsets (either directly below the property label or below the additional label), *and* none of the APLs and/or TSIG keys matched or could be found, then the consumer MUST NOT allow transfers of the member zone to which the property applies.
