@@ -220,7 +220,7 @@ The prefixes listed in the APL RR are processed in order:
 The absence of an `allow-query` property at both apex of the catalog as well as at a member zone, means that the default policy applies, which may be that the member zone is allowed to be queried from any IP address without TSIG key.
 
 Additional attributes (such as TSIG keys) can be bound to specific APL RRs by an additional label below the property label.
-The prefixes(with or without attributes) will be processed in {{Section 6 of !RFC4034 (canonical order)}}, which means that the RRsets at the `allow-query` property label will be processed first, followed by the RRsets with the additional label in canonical order.
+The prefixes (with or without attributes) will be processed in {{Section 6 of !RFC4034 (canonical order)}}, which means that the RRsets at the `allow-query` property label will be processed first, followed by the RRsets with the additional label in canonical order.
 An APL RRset containing more that a single APL RR, MUST be interpreted as an APL RRset containing a single APL RR denying all IP addresses, i.e.: `APL !1:0.0.0.0/0 !2:0:0:0:0:0:0:0:0/0`.
 
 ### TSIG Key Name
