@@ -80,9 +80,7 @@ informative:
 --- abstract
 
 This document specifies DNS Catalog Zones Properties that define the primary name servers from which specific or all member zones can transfer their associated zone, as well as properties related to zone transfers such as access control.
-
 This document also defines a `groups` property, for the apex of the catalog zone, as a location to assign the additional properties to certain catalog zone groups.
-
 Besides the additional properties, this document updates RFC9432 by explicitly allowing CNAMEs and DNAMEs.
 
 --- middle
@@ -180,7 +178,7 @@ Catalog consumers MAY treat such RRs as "unusable".
 ZONELABEL2.zones.$CATZ  0                IN PTR example.net.
 ns1.primaries.ZONELABEL2.zones.$CATZ  0  IN AAAA 2001:db8:35::53
 _853._quic.ns1.primaries.ZONELABEL2.zones.$CATZ  0  IN PTR  ns1.example.net.
-_853._quic.ns1.primaries.ZONELABEL2.zones.$CATZ  0  IN TLSA 3 1 1 <SHA-256 pin>
+_853._quic.ns1.primaries.ZONELABEL2.zones.$CATZ  0  IN TLSA 3 1 1 \<SHA-256 pin\>
 ~~~
 
 ## Notify
@@ -284,10 +282,10 @@ This TXT record MUST be the only record in the TXT RRset with the same name.
 The presence of more than one record in the RRset indicates a broken catalog zone that MUST NOT be processed (see {{Section 5.1. of !RFC9432}}).
 For example, if a catalog zone lists two catalog groups ("foo" and "bar"), the member node RRs would appear as follows:
 
-```
+~~~ ascii-art
 <unique-1>.groups.$CATZ  0 IN TXT    "foo"
 <unique-2>.groups.$CATZ  0 IN TXT    "bar"
-```
+~~~
 
 where `<unique-N>` is a label that tags each record in the collection and has a unique value.
 When different `<unique-N>` labels hold the same TXT value (i.e., provide more than a single place to assign properties to the same group), the catalog zone is broken and MUST NOT be processed (see {{Section 5.1. of !RFC9432}}).
