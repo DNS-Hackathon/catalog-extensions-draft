@@ -225,9 +225,8 @@ When a catalog consumer encounters an APL RRset containing more that a single AP
 
 ### TSIG Key Name
 
-The `allow-query` property MAY also have a TXT RRset, which will (further) restrict the zone to be queryable only with the TSIG key indicated in any of the TXT RRs in the set.
+The `allow-query` property MAY also have a TXT RRset, which will (further) restrict the zone to be queryable only with the TSIG keys indicated in any of the TXT RRs in the set.
 The key(s) MUST be defined elsewhere, such as in the configuration file of the consumer.
-A TXT RRset for a `allow-query` property containing more than a single TXT RR indicates a broken catalog zone that MUST NOT be processed (see {{Section 5.1 of !RFC9432}}).
 
 If a TXT RRset is present together with an APL RR, then first the policies in the APL are applied, and if that results in queries being allowed for the IP address, then in addition a TSIG key MUST match any of the TXT RRs in the TXT RRset.
 If a TXT RRset is present without an APL RRset, then only a TSIG key MUST match in any of the TXT RRs in the TXT RRset, regardless of the querying IP address.
@@ -257,7 +256,6 @@ When a catalog consumer encounters an APL RRset containing more that a single AP
 
 The `allow-transfer` property MAY also have a TXT RRset, which will (further) restrict the zone to be transferable only with the TSIG key indicated in any of the TXT RRs in the set.
 The key(s) MUST be defined elsewhere, such as in the configuration file of the consumer.
-A TXT RRset for a `allow-transfer` property containing more than a single TXT RR indicates a broken catalog zone that MUST NOT be processed (see {{Section 5.1 of !RFC9432}}).
 If a TXT RRset is present together with an APL RR, then first the policies in the APL are applied, and if that results in transfers being allowed for the IP address, then in addition a TSIG key MUST match any of the TXT RRs in the TXT RRset.
 If a TXT RRset is present without an APL RRset, then only a TSIG key MUST match in any of the TXT RRs in the TXT RRset, regardless of the querying IP address.
 
