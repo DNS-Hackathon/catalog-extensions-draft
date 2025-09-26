@@ -81,6 +81,8 @@ informative:
 
 This document specifies DNS Catalog Zones Properties that define the primary name servers from which specific or all member zones can transfer their associated zone, as well as properties related to zone transfers such as access control.
 
+This document also defines a `groups` property, for the apex of the catalog zone, as a location to assign the additional properties to certain catalog zone groups.
+
 Besides the additional properties, this document updates RFC9432 by explicitly allowing CNAMEs and DNAMEs.
 
 --- middle
@@ -267,9 +269,38 @@ ZONELABEL5.zones.$CATZ  0                IN PTR example.local.
 50-external.allow-transfer.ZONELABEL5.zones.$CATZ 0 IN TXT "keyname"
 ~~~
 
+If there are RRs other than APL or CNAME attached to the allow-transfer property, and if an APL RR cannot be found or there is a CNAME that doesn't point to an APL, then the most restrictive access list possible SHOULD be assumed.
+
+# Assigning properties to groups {#groups}
+
+It is possible to assign the properties from this document to catalog groups (see {{Section 4.3.2. of !RFC9432}}).
+To this end this document introduces the `groups` property.
+
+## Groups (the `groups` property)
+
+The list of calalog group that have properties assigned to it, is specified as a collection of member nodes represented by TXT RRs under the owner name "groups" where "groups" is a direct child domain of the catalog zone.
+The names of member zones are represented on the RDATA side of a TXT record (instead of being represented as a part of owner names) so that all valid group names may be represented.
+This TXT record MUST be the only record in the TXT RRset with the same name.
+The presence of more than one record in the RRset indicates a broken catalog zone that MUST NOT be processed (see {{Section 5.1. of !RFC9432}}).
+For example, if a catalog zone lists two catalog groups ("foo" and "bar"), the member node RRs would appear as follows:
+
+```
+<unique-1>.groups.$CATZ  0 IN TXT    "foo"
+<unique-2>.groups.$CATZ  0 IN TXT    "bar"
+```
+
+where `<unique-N>` is a label that tags each record in the collection and has a unique value.
+When different `<unique-N>` labels hold the same TXT value (i.e., provide more than a single place to assign properties to the same group), the catalog zone is broken and MUST NOT be processed (see {{Section 5.1. of !RFC9432}}).
+
+Properties assigned to a catalog group, below an entry below the `groups` property extends the configuration that was already associated with that group.
+If the existing configuration for the group had a configuration value, that is also targeted with property assigned for the group, then the assigned properties value MUST override the original value.
+If there was no existing group yet, then an entry below the `groups` property defines the new group.
+
 # Implementation and Operational Notes
 
 One of the rationales for allowing CNAMEs and DNAMEs is that a large and complex catalog may have large and complex access lists repeated a million times. But if there are only a few different access lists, they could be defined separately and then be referenced a million times, reducing both the size and processing effort of the catalog zone.
+
+Alternatively, a group property may be used for this, which will or will not have additional properties assigned to it under the `groups` property (see {{groups}}).
 
 # IANA Considerations {#IANA}
 
@@ -277,6 +308,7 @@ IANA is requested to add the following entries to the "DNS Catalog Zones Propert
 
 | Property Prefix | Description              | Status          | Reference         |
 |-----------------|--------------------------|-----------------|-------------------|
+| groups          | List of catalog groups   | Standards track | \[this document\] |
 | primaries       | Primary name servers     | Standards Track | \[this document\] |
 | notify          | Send DNS NOTIFY behavior | Standards track | \[this document\] |
 | allow-transfer  | Allow zone transfer from | Standards track | \[this document\] |
@@ -296,7 +328,7 @@ The original RFC for Catalog Zones already covers a lot of security and privacy 
 
 ## Private Zone Exfiltration
 
-If the Catalog Zone producer and consumer are different organizations, the producer may be able to use a crafted Catalog Zone to exfiltrate a private zone on another server within the consumer's network by listing it in the Catalog Zone with more permissive query or transfer access lists. The producer needs to know the exact name of the private zone and an address of the primary where the consumer may fetch it from.f
+If the Catalog Zone producer and consumer are different organizations, the producer may be able to use a crafted Catalog Zone to exfiltrate a private zone on another server within the consumer's network by listing it in the Catalog Zone with more permissive query or transfer access lists. The producer needs to know the exact name of the private zone and an address of the primary where the consumer may fetch it from.
 
 There are two ways to approach this security issue. One is to make sure that the consumer organisation does not allow zone transfers for private zones on the consuming server. Another approach is to sanitize the incoming Catalog Zone before consuming it, removing anything sensitive from it.
 
