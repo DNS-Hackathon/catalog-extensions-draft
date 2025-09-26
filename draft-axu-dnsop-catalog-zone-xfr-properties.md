@@ -80,7 +80,9 @@ informative:
 --- abstract
 
 This document specifies DNS Catalog Zones Properties that define the primary name servers from which specific or all member zones can transfer their associated zone, as well as properties related to zone transfers such as access control.
+
 This document also defines a `groups` property, for the apex of the catalog zone, as a location to assign the additional properties to certain catalog zone groups.
+
 Besides the additional properties, this document updates RFC9432 by explicitly allowing CNAMEs and DNAMEs.
 
 --- middle
