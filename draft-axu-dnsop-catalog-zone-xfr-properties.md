@@ -4,7 +4,7 @@ abbrev: catalog-zone-xfr-properties
 category: std
 
 
-docname: draft-axu-dnsop-catalog-zone-xfr-properties-01
+docname: draft-axu-dnsop-catalog-zone-xfr-properties-02
 submissiontype: IETF
 number:
 date:
