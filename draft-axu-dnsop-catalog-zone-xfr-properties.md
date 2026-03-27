@@ -109,13 +109,13 @@ The new properties, specified in {{new-properties}}, MAY be at the apex of the c
 When a property is overriden, the new property replaces all RRs of the old property. For example, both TXT and AAAA RRs defined at the apex are ignored for `ZONELABEL1`, but not ignored for `ZONELABEL2`, because `ZONELABEL2` does not override the `primaries` property:
 
 ~~~ ascii-art
-label.primaries.$CATZ   0            IN AAAA 2001:db8:35::53
-label.primaries.$CATZ   0            IN TXT "TSIG key"
+label.primaries.$CATZ            0 IN AAAA 2001:db8:35::53
+label.primaries.$CATZ            0 IN TXT "TSIG key"
 
-ZONELABEL1.zones.$CATZ  0            IN PTR example.com.
-primaries.ZONELABEL1.zones.$CATZ  0  IN A 192.0.2.53
+ZONELABEL1.zones.$CATZ           0 IN PTR example.com.
+primaries.ZONELABEL1.zones.$CATZ 0 IN A 192.0.2.53
 
-ZONELABEL2.zones.$CATZ  0            IN PTR example.net.
+ZONELABEL2.zones.$CATZ           0 IN PTR example.net.
 ~~~
 
 ## Binding additional attributes
@@ -132,14 +132,17 @@ When a CNAME and DNAME RRs refer to owner names outside of the (catalog) zone, t
 For example, using some of the properties from {{new-properties}}:
 
 ~~~ ascii-art
-ZONELABEL1.zones.$CATZ                0 IN PTR   example.com.
-ZONELABEL1.zones.$CATZ                0 IN DNAME customer1.config.$CATZ
+ZONELABEL1.zones.$CATZ                0 IN PTR example.com.
+ZONELABEL1.zones.$CATZ                0 IN DNAME ( 
+                                             customer1.config.$CATZ )
 
 primaries.customer1.config.$CATZ      0 IN A 192.0.2.53
 primaries.customer1.config.$CATZ      0 IN TXT "TSIG key"
-allow-transfer.customer1.config.$CATZ 0 IN CNAME internal.acls.config.$CATZ
+allow-transfer.customer1.config.$CATZ 0 IN CNAME ( 
+                                         internal.acls.config.$CATZ )
 
-internal.acls.config.$CATZ            0 IN APL 1:10.0.0.0/8 2:fd00:0:0:0:0:0:0:0/8
+internal.acls.config.$CATZ            0 IN APL ( 1:10.0.0.0/8
+                                             2:fd00:0:0:0:0:0:0:0/8 )
 ~~~
 
 # Schema Version (version property)
@@ -163,10 +166,10 @@ The order may be used following the default selection process in use by the cata
 Different primaries MAY be distinguished by an additional label, which will allow binding additional attributes to each server.
 
 ~~~ ascii-art
-primaries.$CATZ   0                  IN A 192.0.2.53
+primaries.$CATZ                  0 IN A 192.0.2.53
 
-ZONELABEL1.zones.$CATZ  0            IN PTR example.com.
-primaries.ZONELABEL1.zones.$CATZ  0  IN AAAA 2001:db8:35::53
+ZONELABEL1.zones.$CATZ           0 IN PTR example.com.
+primaries.ZONELABEL1.zones.$CATZ 0 IN AAAA 2001:db8:35::53
 ~~~
 
 If there are any RRs attached to the `primaries` that are not defined by this document, they SHOULD be ignored.
@@ -178,11 +181,11 @@ If the key cannot be found, the consumer MUST NOT attempt a zone transfer from t
 A TXT RRset for a `primaries` property containing more than a single TXT RR indicates a broken catalog zone that MUST NOT be processed (see {{Section 5.1 of !RFC9432}}).
 
 ~~~ ascii-art
-ZONELABEL2.zones.$CATZ  0                IN PTR example.net.
-ns1.primaries.ZONELABEL2.zones.$CATZ  0  IN AAAA 2001:db8:35::53
-ns1.primaries.ZONELABEL2.zones.$CATZ  0  IN TXT "keyname-for-ns1"
-ns2.primaries.ZONELABEL2.zones.$CATZ  0  IN AAAA 2001:db8:35::54
-ns2.primaries.ZONELABEL2.zones.$CATZ  0  IN TXT "keyname-for-ns2"
+ZONELABEL2.zones.$CATZ               0 IN PTR example.net.
+ns1.primaries.ZONELABEL2.zones.$CATZ 0 IN AAAA 2001:db8:35::53
+ns1.primaries.ZONELABEL2.zones.$CATZ 0 IN TXT "keyname-for-ns1"
+ns2.primaries.ZONELABEL2.zones.$CATZ 0 IN AAAA 2001:db8:35::54
+ns2.primaries.ZONELABEL2.zones.$CATZ 0 IN TXT "keyname-for-ns2"
 ~~~
 
 ### Signalling encrypted transports
@@ -198,10 +201,13 @@ When an authentication domain name is provided, catalog consumer MUST send the T
 For the same reasons as given in {{Section 3.1.3 of !RFC7672}}, the TLSA RRs with certificate usage PKIX-TA(0) or PKIX-EE(1) SHOULD NOT be included. Catalog consumers SHOULD treat such RRs as "unusable" and ignore the affected `primaries` property. Catalog consumers SHOULD also communicate the error to the operator (e.g., through a log message).
 
 ~~~ ascii-art
-ZONELABEL2.zones.$CATZ  0                IN PTR example.net.
-ns1.primaries.ZONELABEL2.zones.$CATZ  0  IN AAAA 2001:db8:35::53
-_853._quic.ns1.primaries.ZONELABEL2.zones.$CATZ  0  IN PTR  ns1.example.net.
-_853._quic.ns1.primaries.ZONELABEL2.zones.$CATZ  0  IN TLSA 3 1 1 \<SHA-256 pin\>
+ZONELABEL2.zones.$CATZ                          0 IN PTR example.net.
+ns1.primaries.ZONELABEL2.zones.$CATZ            0 IN AAAA (
+                                                    2001:db8:35::53 )
+_853._quic.ns1.primaries.ZONELABEL2.zones.$CATZ 0 IN PTR (
+                                                   ns1.example.net. )
+_853._quic.ns1.primaries.ZONELABEL2.zones.$CATZ 0 IN TLSA (
+                                              3 1 1 \<SHA-256 pin\> )
 ~~~
 
 ## Notify
@@ -257,8 +263,10 @@ If a TXT RRset is present without an APL RRset, then only a TSIG key MUST match 
 If an `allow-query` property is present *and* contains APL RRsets and/or TXT RRsets (either directly below the property label or below the additional label), *and* none of the ACLs and/or TSIG keys matched or could be found, then the consumer MUST NOT allow queries for the member zone to which the property applies.
 
 ~~~ ascii-art
-ZONELABEL5.zones.$CATZ  0                IN PTR example.local.
-00-internal.allow-query.ZONELABEL5.zones.$CATZ 0 IN APL 1:10.0.0.0/8 2:fd00:0:0:0:0:0:0:0/8
+ZONELABEL5.zones.$CATZ                         0 IN PTR (
+                                                     example.local. )
+00-internal.allow-query.ZONELABEL5.zones.$CATZ 0 IN APL (
+                                1:10.0.0.0/8 2:fd00:0:0:0:0:0:0:0/8 )
 50-external.allow-query.ZONELABEL5.zones.$CATZ 0 IN TXT "keyname"
 ~~~
 
@@ -285,8 +293,10 @@ If a TXT RRset is present without an APL RRset, then only a TSIG key MUST match 
 If an `allow-transfer` property is present *and* contains APL RRsets and/or TXT RRsets (either directly below the property label or below the additional label), *and* none of the APLs and/or TSIG keys matched or could be found, then the consumer MUST NOT allow transfers of the member zone to which the property applies.
 
 ~~~ ascii-art
-ZONELABEL5.zones.$CATZ  0                IN PTR example.local.
-00-internal.allow-transfer.ZONELABEL5.zones.$CATZ 0 IN APL 1:10.0.0.0/8 2:fd00:0:0:0:0:0:0:0/8
+ZONELABEL5.zones.$CATZ                            0 IN PTR (
+                                                     example.local. )
+00-internal.allow-transfer.ZONELABEL5.zones.$CATZ 0 IN APL (
+                                1:10.0.0.0/8 2:fd00:0:0:0:0:0:0:0/8 )
 50-external.allow-transfer.ZONELABEL5.zones.$CATZ 0 IN TXT "keyname"
 ~~~
 
@@ -306,8 +316,8 @@ The presence of more than one record in the RRset indicates a broken catalog zon
 For example, if a catalog zone lists two catalog groups ("foo" and "bar"), the member node RRs would appear as follows:
 
 ~~~ ascii-art
-<unique-1>.groups.$CATZ  0 IN TXT    "foo"
-<unique-2>.groups.$CATZ  0 IN TXT    "bar"
+<unique-1>.groups.$CATZ 0 IN TXT "foo"
+<unique-2>.groups.$CATZ 0 IN TXT "bar"
 ~~~
 
 where `<unique-N>` is a label that tags each record in the collection and has a unique value.
@@ -358,30 +368,32 @@ There are two ways to approach this security issue. One is to make sure that the
 # Example Catalog with One of Everything
 
 ~~~ ascii-art
-primaries.$CATZ   0                  IN A 192.0.2.53
+primaries.$CATZ                       0 IN A 192.0.2.53
 
-ZONELABEL1.zones.$CATZ  0            IN PTR example.com.
-primaries.ZONELABEL1.zones.$CATZ  0  IN AAAA 2001:db8:35::53
+ZONELABEL1.zones.$CATZ                0 IN PTR example.com.
+primaries.ZONELABEL1.zones.$CATZ      0 IN AAAA 2001:db8:35::53
 
-ZONELABEL2.zones.$CATZ  0                IN PTR example.net.
-ns1.primaries.ZONELABEL2.zones.$CATZ  0  IN AAAA 2001:db8:35::53
-ns1.primaries.ZONELABEL2.zones.$CATZ  0  IN TXT "keyname-for-ns1"
-ns2.primaries.ZONELABEL2.zones.$CATZ  0  IN AAAA 2001:db8:35::54
-ns2.primaries.ZONELABEL2.zones.$CATZ  0  IN TXT "keyname-for-ns2"
+ZONELABEL2.zones.$CATZ                0 IN PTR example.net.
+ns1.primaries.ZONELABEL2.zones.$CATZ  0 IN AAAA 2001:db8:35::53
+ns1.primaries.ZONELABEL2.zones.$CATZ  0 IN TXT "keyname-for-ns1"
+ns2.primaries.ZONELABEL2.zones.$CATZ  0 IN AAAA 2001:db8:35::54
+ns2.primaries.ZONELABEL2.zones.$CATZ  0 IN TXT "keyname-for-ns2"
 
-notify.$CATZ  0                          IN A 192.0.2.49
+notify.$CATZ                          0 IN A 192.0.2.49
 
-ZONELABEL3.zones.$CATZ  0                IN PTR example.org.
-notify.ZONELABEL3.zones.$CATZ  0         IN AAAA 2001:db8:35::53
-notify.ZONELABEL3.zones.$CATZ  0         IN TXT "no default notifies"
+ZONELABEL3.zones.$CATZ                0 IN PTR example.org.
+notify.ZONELABEL3.zones.$CATZ         0 IN AAAA 2001:db8:35::53
+notify.ZONELABEL3.zones.$CATZ         0 IN TXT "no default notifies"
 
-ZONELABEL4.zones.$CATZ  0                IN PTR sub.example.org.
-notify.ZONELABEL4.zones.$CATZ  0         IN AAAA 2001:db8:35::54
-notify.ZONELABEL4.zones.$CATZ  0         IN TXT ""
+ZONELABEL4.zones.$CATZ                0 IN PTR sub.example.org.
+notify.ZONELABEL4.zones.$CATZ         0 IN AAAA 2001:db8:35::54
+notify.ZONELABEL4.zones.$CATZ         0 IN TXT ""
 
-ZONELABEL5.zones.$CATZ  0                IN PTR example.local.
-allow-query.ZONELABEL5.zones.$CATZ  0    IN APL 1:10.0.0.0/8 !1:0.0.0.0/0 !2:0:0:0:0:0:0:0:0/0
-allow-transfer.ZONELABEL5.zones.$CATZ  0   IN APL !1:0.0.0.0/0 !2:0:0:0:0:0:0:0:0/0
+ZONELABEL5.zones.$CATZ                0 IN PTR example.local.
+allow-query.ZONELABEL5.zones.$CATZ    0 IN APL 1:10.0.0.0/8 (
+                                  !1:0.0.0.0/0 !2:0:0:0:0:0:0:0:0/0 )
+allow-transfer.ZONELABEL5.zones.$CATZ 0 IN APL !1:0.0.0.0/0 (
+                                               !2:0:0:0:0:0:0:0:0/0 )
 ~~~
 
 # Acknowledgements
